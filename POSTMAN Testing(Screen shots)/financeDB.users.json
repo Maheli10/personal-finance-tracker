@@ -1,0 +1,37 @@
+[{
+  "_id": {
+    "$oid": "69ff3d1286b814a634427dd7"
+  },
+  "name": "Kamal Perera",
+  "email": "Kamal@gmail.com",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69ff3fcc9e7bc9a771440f44"
+  },
+  "name": "Maheli Samaraweera",
+  "email": "maheli@gmail.com",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69ff5f4c1ae7a9fa934f6629"
+  },
+  "name": "Sarah Perera",
+  "email": "sarah@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "69ff5f5e1ae7a9fa934f662b"
+  },
+  "name": "John Doe",
+  "email": "john@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "69ff6350fcd9e3e2c9cf6b3f"
+  },
+  "name": "Nimali Fernando",
+  "email": "nimali@gmail.com"
+}]
