@@ -183,3 +183,90 @@ body {
   max-width: fit-content;
   background:#444;
 }
+
+@media (max-width: 768px) {
+  .container {
+    width: 90%;
+    max-height: 95vh;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .form-group input,
+  .form-group select {
+    font-size: 14px;
+  }
+
+  .btn {
+    font-size: 14px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    align-items: flex-start; /* better for small screens */
+  }
+
+  .container {
+    width: 95%;
+    border-radius: 15px;
+    padding: 15px;
+  }
+
+  .title {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .form-group input,
+  .form-group select {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .btn {
+    font-size: 13px;
+    padding: 10px;
+    border-radius: 15px;
+  }
+
+  .report-main-btn {
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  .summary {
+    padding: 10px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .card h3 {
+    font-size: 18px;
+  }
+
+  .card p {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .button-group {
+    gap: 8px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+@media (max-width: 480px) {
+  body {
+    display: block;
+    padding: 15px;
+  }
+}
