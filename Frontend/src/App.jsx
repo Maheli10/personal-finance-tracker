@@ -1,240 +1,142 @@
 import "./App.css";
 import Report from "./Report.jsx";
+import LandingPage from "./LandingPage";
+import Login from "./Login";
+import Signup from "./Signup";
 import { useEffect, useState } from "react";
 
 function App() {
 
   const [transactions, setTransactions] = useState([]);
-
   const [showReport, setShowReport] = useState(false);
+  const [page, setPage] = useState("landing");
 
   // FETCH TRANSACTIONS
-
   const fetchTransactions = async () => {
-
     try {
-
       const res = await fetch(
         "https://personal-finance-tracker-kblh.onrender.com/api/transactions"
       );
 
       const data = await res.json();
-
       setTransactions(data);
 
     } catch (err) {
-
       console.log(err);
-
     }
-
   };
 
   useEffect(() => {
-
     fetchTransactions();
-
   }, []);
 
   // REPORT CALCULATIONS
-
   let income = 0;
   let expense = 0;
 
   transactions.forEach((t) => {
-
     if (t.type === "income") {
-
       income += t.amount;
-
     } else {
-
       expense += t.amount;
-
     }
-
   });
 
   const balance = income - expense;
 
+  // ✅ MAIN ROUTING (FIXED)
   return (
+    <>
+      {page === "landing" && (
+        <LandingPage setPage={setPage} />
+      )}
 
-    <div className="container">
+      {page === "login" && (
+        <Login setPage={setPage} />
+      )}
 
-      {!showReport ? (
+      {page === "signup" && (
+        <Signup setPage={setPage} />
+      )}
 
-        <>
-          {/* MAIN PAGE */}
+      {page === "app" && (
+        <div className="container">
 
-          <h1 className="title">
-            Personal Finance Tracker
-          </h1>
+          {!showReport ? (
+            <>
+              <h1 className="title">Personal Finance Tracker</h1>
 
-          <div className="main">
+              <div className="main">
 
-            {/* LEFT SIDE */}
+                {/* LEFT SIDE */}
+                <div className="form-section">
+                  <form>
 
-            <div className="form-section">
+                    <div className="form-group">
+                      <label>Transaction Title</label>
+                      <input type="text" />
+                    </div>
 
-              <form>
+                    <div className="form-group">
+                      <label>Amount</label>
+                      <input type="number" />
+                    </div>
 
-                {/* USER */}
+                    <div className="form-group">
+                      <label>Type</label>
+                      <select>
+                        <option>income</option>
+                        <option>expense</option>
+                      </select>
+                    </div>
 
-                <div className="form-group">
+                    <div className="button-group">
+                      <button className="btn">Add</button>
+                      <button className="btn update-btn">Update</button>
+                      <button className="btn delete-btn">Delete</button>
 
-                  <label>User Name</label>
+                      <button
+                        type="button"
+                        className="btn report-main-btn"
+                        onClick={() => setShowReport(true)}
+                      >
+                        Get Report
+                      </button>
+                    </div>
 
-                  <input
-                    type="text"
-                    placeholder="Enter user name"
-                  />
-
+                  </form>
                 </div>
 
-                {/* EMAIL */}
+                {/* RIGHT SIDE */}
+                <div className="transactions">
+                  <h2>Recent Transactions</h2>
 
-                <div className="form-group">
-
-                  <label>Email</label>
-
-                  <input
-                    type="email"
-                    placeholder="Enter email"
-                  />
-
+                  {transactions.map((t) => (
+                    <div className="transaction" key={t._id}>
+                      <h3>{t.title}</h3>
+                      <p>{t.type}</p>
+                      <p>
+                        {t.type === "income" ? "+" : "-"} Rs. {t.amount}
+                      </p>
+                    </div>
+                  ))}
                 </div>
 
-                {/* TITLE */}
+              </div>
+            </>
+          ) : (
+            <Report
+              income={income}
+              expense={expense}
+              balance={balance}
+              setShowReport={setShowReport}
+            />
+          )}
 
-                <div className="form-group">
-
-                  <label>Transaction Title</label>
-
-                  <input
-                    type="text"
-                    placeholder="Ex: Salary, Food, Taxi"
-                  />
-
-                </div>
-
-                {/* AMOUNT */}
-
-                <div className="form-group">
-
-                  <label>Amount</label>
-
-                  <input
-                    type="number"
-                    placeholder="Enter amount"
-                  />
-
-                </div>
-
-                {/* TYPE */}
-
-                <div className="form-group">
-
-                  <label>Type</label>
-
-                  <select>
-
-                    <option>income</option>
-
-                    <option>expense</option>
-
-                  </select>
-
-                </div>
-
-                {/* BUTTONS */}
-
-                <div className="button-group">
-
-                  <button className="btn">
-                    Add Transaction
-                  </button>
-
-                  <button className="btn update-btn">
-                    Update Transaction
-                  </button>
-
-                  <button className="btn delete-btn">
-                    Delete Transaction
-                  </button>
-
-                  <button
-                    type="button"
-                    className="btn report-main-btn"
-                    onClick={() => setShowReport(true)}
-                  >
-                    Get Report
-                  </button>
-
-                </div>
-
-              </form>
-
-            </div>
-
-            {/* RIGHT SIDE */}
-
-            <div className="transactions">
-
-              <h2>Recent Transactions</h2>
-
-              {transactions.map((t) => (
-
-                <div
-                  className="transaction"
-                  key={t._id}
-                >
-
-                  <div className="transaction-info">
-
-                    <h3>{t.title}</h3>
-
-                    <p>{t.type}</p>
-
-                  </div>
-
-                  <p
-                    className={
-                      t.type === "income"
-                        ? "transaction-income"
-                        : "transaction-expense"
-                    }
-                  >
-
-                    {t.type === "income" ? "+" : "-"}
-                    Rs. {t.amount}
-
-                  </p>
-
-                </div>
-
-              ))}
-
-            </div>
-
-          </div>
-
-        </>
-
-      ) 
-        : (
-
-          <Report
-            income={income}
-            expense={expense}
-            balance={balance}
-            setShowReport={setShowReport}
-          />
-
-        )}
-
-    </div>
-
-  );  
+        </div>
+      )}
+    </>
+  );
 }
 
 export default App;
