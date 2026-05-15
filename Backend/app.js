@@ -16,7 +16,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URL;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "personal-finance-tracker-sepia-gamma.vercel.app",
+  })
+);
 app.use(express.json());
 app.use(bodyParser.json());
 

@@ -93,15 +93,15 @@ body {
 }
 
 .btn{
-  background:#1565ff;
+  background:#3B82F6;
 }
 
 .update-btn{
-  background:#ff9800;
+  background:#2563EB;
 }
 
 .delete-btn{
-  background:#dc3545;
+  background:#1D4ED8;
 }
 
 /* SPECIAL REPORT BUTTON */
@@ -117,7 +117,7 @@ body {
 
   border-radius:12px;
 
-  background:#28a745;
+  background:#1E40AF;
 
   color:white;
 
@@ -132,7 +132,7 @@ body {
 
 .report-main-btn:hover{
   transform:scale(1.02);
-  background:#1f8a37;
+  background:#082665;
 }
 
 /* REPORT PAGE */
@@ -165,15 +165,15 @@ body {
 }
 
 .income{
-  background:#28a745;
+  background:#14b8a6;
 }
 
 .expense{
-  background:#dc3545;
+  background:#0f766e;
 }
 
 .balance{
-  background:#0a2f6b;
+  background:#134e4a;
 }
 
 /* BACK BUTTON */

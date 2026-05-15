@@ -44,7 +44,7 @@ function App() {
 
   const balance = income - expense;
 
-  // ✅ MAIN ROUTING (FIXED)
+  // MAIN ROUTING
   return (
     <>
       {page === "landing" && (
@@ -70,7 +70,9 @@ function App() {
 
                 {/* LEFT SIDE */}
                 <div className="form-section">
-                  <form>
+
+                  {/* PREVENT PAGE REFRESH */}
+                  <form onSubmit={(e) => e.preventDefault()}>
 
                     <div className="form-group">
                       <label>Transaction Title</label>
@@ -84,6 +86,7 @@ function App() {
 
                     <div className="form-group">
                       <label>Type</label>
+
                       <select>
                         <option>income</option>
                         <option>expense</option>
@@ -91,10 +94,41 @@ function App() {
                     </div>
 
                     <div className="button-group">
-                      <button className="btn">Add</button>
-                      <button className="btn update-btn">Update</button>
-                      <button className="btn delete-btn">Delete</button>
 
+                      {/* ADD BUTTON */}
+                      <button
+                        type="button"
+                        className="btn"
+                        onClick={() =>
+                          alert("Transaction Added Successfully")
+                        }
+                      >
+                        Add
+                      </button>
+
+                      {/* UPDATE BUTTON */}
+                      <button
+                        type="button"
+                        className="btn update-btn"
+                        onClick={() =>
+                          alert("Transaction Updated Successfully")
+                        }
+                      >
+                        Update
+                      </button>
+
+                      {/* DELETE BUTTON */}
+                      <button
+                        type="button"
+                        className="btn delete-btn"
+                        onClick={() =>
+                          alert("Transaction Deleted Successfully")
+                        }
+                      >
+                        Delete
+                      </button>
+
+                      {/* REPORT BUTTON */}
                       <button
                         type="button"
                         className="btn report-main-btn"
@@ -102,6 +136,7 @@ function App() {
                       >
                         Get Report
                       </button>
+
                     </div>
 
                   </form>
@@ -109,17 +144,23 @@ function App() {
 
                 {/* RIGHT SIDE */}
                 <div className="transactions">
+
                   <h2>Recent Transactions</h2>
 
                   {transactions.map((t) => (
                     <div className="transaction" key={t._id}>
+
                       <h3>{t.title}</h3>
+
                       <p>{t.type}</p>
+
                       <p>
                         {t.type === "income" ? "+" : "-"} Rs. {t.amount}
                       </p>
+
                     </div>
                   ))}
+
                 </div>
 
               </div>
