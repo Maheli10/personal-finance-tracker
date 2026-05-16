@@ -1,18 +1,45 @@
 /**
- * Optional hosted API — set VITE_API_URL (or VITE_REMOTE_API_URL) in .env when needed.
- * No default remote URL is bundled.
+ * API base resolution (no bundled default host):
+ * 1) VITE_API_URL or VITE_REMOTE_API_URL (build-time; set in Vercel → Environment Variables)
+ * 2) <meta name="api-origin" content="https://your-api.example.com"> in index.html (runtime)
+ *
+ * Local dev (localhost:5173): leave both unset → same-origin `/api` → Vite proxy → :3000.
+ * Vercel: you must set (1) or (2); same-origin `/api` is not proxied unless you add rewrites.
  */
+function metaApiOrigin() {
+  if (typeof document === "undefined") return "";
+  const el = document.querySelector('meta[name="api-origin"]');
+  const raw = el?.getAttribute("content")?.trim();
+  if (!raw) return "";
+  return raw.replace(/\/$/, "");
+}
+
 function remoteApiBase() {
-  const raw =
-    import.meta.env.VITE_API_URL ?? import.meta.env.VITE_REMOTE_API_URL ?? "";
-  return String(raw).trim().replace(/\/$/, "");
+  const fromEnv = String(
+    import.meta.env.VITE_API_URL ?? import.meta.env.VITE_REMOTE_API_URL ?? ""
+  )
+    .trim()
+    .replace(/\/$/, "");
+  const fromMeta = metaApiOrigin();
+  return fromEnv || fromMeta;
+}
+
+let warnedProdWithoutApi = false;
+
+function warnProductionWithoutApi(remote) {
+  if (import.meta.env.DEV || remote || warnedProdWithoutApi) return;
+  warnedProdWithoutApi = true;
+  console.warn(
+    "[finance-tracker] Deployed build has no API origin. Add VITE_API_URL in Vercel (Project → Settings → Environment Variables) and redeploy, " +
+      "or set <meta name=\"api-origin\" content=\"https://your-api-host\"> in index.html."
+  );
 }
 
 /**
- * Dev: "" → same-origin /api → Vite proxy → backend (default VITE_PROXY_TARGET :3000).
- * Prod: only VITE_API_URL / VITE_REMOTE_API_URL (required for deployed frontend).
+ * Client default: dev uses "" (proxy). Prod uses remote env/meta if set, else "" (same-origin).
  */
-export const API_BASE = import.meta.env.DEV ? "" : remoteApiBase();
+export const API_BASE =
+  import.meta.env.DEV ? "" : remoteApiBase() || "";
 
 export function apiUrl(path, baseOverride = API_BASE) {
   const p = path.startsWith("/") ? path : `/${path}`;
@@ -21,16 +48,15 @@ export function apiUrl(path, baseOverride = API_BASE) {
 }
 
 /**
- * Dev: local proxy first; if VITE_API_URL is set, retry against it after failures.
- * Prod: only configured remote origin(s).
- *
- * VITE_API_PREFER_LOCAL=false — try VITE_API_URL first in dev, then proxy.
+ * Dev: `/api` via Vite proxy when no env; if VITE_API_URL set, prefer local proxy or remote via VITE_API_PREFER_LOCAL.
+ * Prod: only the resolved remote origin (env or meta); never same-origin `/api` unless you intentionally leave it unset.
  */
 function apiBaseAttempts() {
   const remote = remoteApiBase();
 
   if (!import.meta.env.DEV) {
-    return remote ? [remote] : [];
+    warnProductionWithoutApi(remote);
+    return remote ? [remote] : [""];
   }
 
   if (!remote) {
@@ -51,18 +77,12 @@ function shouldRetryWithHosted(devFirstAttempt, response) {
 }
 
 export const API_SETUP_HINT =
-  "Run the backend on port 3000 (see vite proxy) or set VITE_API_URL.";
+  "On Vercel: set VITE_API_URL to your API (e.g. https://your-app.onrender.com), redeploy. Locally: npm run dev with backend on port 3000.";
 
 /** Avoid infinite spinner; tries each base until one returns or all fail. */
 export async function apiFetch(path, options = {}, timeoutMs = 20000) {
   const p = path.startsWith("/") ? path : `/${path}`;
   const bases = apiBaseAttempts();
-
-  if (bases.length === 0) {
-    throw new Error(
-      `Missing API URL. Set VITE_API_URL for production builds. ${API_SETUP_HINT}`
-    );
-  }
 
   let lastError;
 

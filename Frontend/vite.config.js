@@ -10,15 +10,20 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, configDir, '')
   const proxyTarget = env.VITE_PROXY_TARGET || 'http://localhost:3000'
 
+  const apiProxy = {
+    '/api': {
+      target: proxyTarget,
+      changeOrigin: true,
+    },
+  }
+
   return {
     plugins: [react()],
     server: {
-      proxy: {
-        '/api': {
-          target: proxyTarget,
-          changeOrigin: true,
-        },
-      },
+      proxy: apiProxy,
+    },
+    preview: {
+      proxy: apiProxy,
     },
   }
 })
