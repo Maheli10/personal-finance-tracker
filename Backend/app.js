@@ -49,6 +49,10 @@ app.get("/", (req, res) => {
   res.send("Finance Tracker API is running successfully!");
 });
 
+app.get("/ping", (req, res) => {
+  res.send("Server awake");
+});
+
 app.use("/api/users", userRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/reports", reportRoutes);
