@@ -1,4 +1,4 @@
-import { apiFetch } from "./api.js";
+import { apiFetch, API_SETUP_HINT } from "./api.js";
 
 /**
  * Loads transactions for a user; no React setState — safe to call from effects via .then().
@@ -35,13 +35,16 @@ export async function loadUserTransactions(username, options = {}) {
     };
   } catch (err) {
     console.error(err);
+    const msg = String(err.message ?? "");
     return {
       ok: false,
       transactions: [],
       errorMessage:
         err.name === "AbortError"
-          ? "Request timed out — local API down and hosted API slow?"
-          : "Could not reach API after trying local then hosted.",
+          ? `Request timed out. ${API_SETUP_HINT}`
+          : msg.includes("VITE_API_URL")
+            ? msg
+            : `Could not reach the API. ${API_SETUP_HINT}`,
     };
   }
 }

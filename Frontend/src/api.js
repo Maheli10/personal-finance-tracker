@@ -1,17 +1,16 @@
-const REMOTE_DEFAULT = "https://personal-finance-tracker-kblh.onrender.com";
-
-/** Hosted API base (Render). Same env works in dev & prod builds. */
+/**
+ * Optional hosted API — set VITE_API_URL (or VITE_REMOTE_API_URL) in .env when needed.
+ * No default remote URL is bundled.
+ */
 function remoteApiBase() {
   const raw =
-    import.meta.env.VITE_API_URL ??
-    import.meta.env.VITE_REMOTE_API_URL ??
-    REMOTE_DEFAULT;
-  return String(raw).replace(/\/$/, "");
+    import.meta.env.VITE_API_URL ?? import.meta.env.VITE_REMOTE_API_URL ?? "";
+  return String(raw).trim().replace(/\/$/, "");
 }
 
 /**
- * Debug / compatibility: production uses hosted URL only.
- * In dev, "" means same-origin `/api…` → Vite proxy → localhost backend.
+ * Dev: "" → same-origin /api → Vite proxy → backend (default VITE_PROXY_TARGET :3000).
+ * Prod: only VITE_API_URL / VITE_REMOTE_API_URL (required for deployed frontend).
  */
 export const API_BASE = import.meta.env.DEV ? "" : remoteApiBase();
 
@@ -22,16 +21,20 @@ export function apiUrl(path, baseOverride = API_BASE) {
 }
 
 /**
- * Dev: try local API first (Vite proxy → :3000), then hosted API if proxy/backend fails.
- * Prod (e.g. Vercel): hosted API only — browsers cannot reach your machine's localhost.
+ * Dev: local proxy first; if VITE_API_URL is set, retry against it after failures.
+ * Prod: only configured remote origin(s).
  *
- * Set VITE_API_PREFER_LOCAL=false in dev to try hosted first, then local proxy.
+ * VITE_API_PREFER_LOCAL=false — try VITE_API_URL first in dev, then proxy.
  */
 function apiBaseAttempts() {
   const remote = remoteApiBase();
 
   if (!import.meta.env.DEV) {
-    return [remote];
+    return remote ? [remote] : [];
+  }
+
+  if (!remote) {
+    return [""];
   }
 
   const preferLocal = import.meta.env.VITE_API_PREFER_LOCAL !== "false";
@@ -47,10 +50,19 @@ function shouldRetryWithHosted(devFirstAttempt, response) {
   );
 }
 
+export const API_SETUP_HINT =
+  "Run the backend on port 3000 (see vite proxy) or set VITE_API_URL.";
+
 /** Avoid infinite spinner; tries each base until one returns or all fail. */
 export async function apiFetch(path, options = {}, timeoutMs = 20000) {
   const p = path.startsWith("/") ? path : `/${path}`;
   const bases = apiBaseAttempts();
+
+  if (bases.length === 0) {
+    throw new Error(
+      `Missing API URL. Set VITE_API_URL for production builds. ${API_SETUP_HINT}`
+    );
+  }
 
   let lastError;
 

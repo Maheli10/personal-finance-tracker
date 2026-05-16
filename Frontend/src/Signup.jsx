@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./Aauth.css";
-import { apiFetch } from "./api.js";
+import { apiFetch, API_SETUP_HINT } from "./api.js";
 
 function Signup({ setPage, setUsername }) {
 
@@ -34,12 +34,13 @@ function Signup({ setPage, setUsername }) {
       setUsername(data.username);
       setPage("app");
     } catch (err) {
+      const msg = String(err.message ?? "");
       if (err.name === "AbortError") {
-        setError(
-          "Request timed out. Run the backend on port 3000 (see vite proxy) or set VITE_API_URL."
-        );
+        setError(`Request timed out. ${API_SETUP_HINT}`);
+      } else if (msg.includes("VITE_API_URL")) {
+        setError(msg);
       } else {
-        setError("Cannot reach server.");
+        setError(`Cannot reach server. ${API_SETUP_HINT}`);
       }
     } finally {
       setLoading(false);
