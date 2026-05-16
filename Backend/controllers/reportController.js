@@ -2,9 +2,8 @@ import Transaction from "../models/transaction.js";
 
 export const getReport = async (req, res) => {
   try {
-    const transactions = await Transaction.find({
-      userId: req.params.userId,
-    });
+    const username = decodeURIComponent(req.params.username).trim().toLowerCase();
+    const transactions = await Transaction.find({ username });
 
     let income = 0;
     let expense = 0;

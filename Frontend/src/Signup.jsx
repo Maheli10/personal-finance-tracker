@@ -1,16 +1,48 @@
 import { useState } from "react";
 import "./Aauth.css";
+import { apiFetch } from "./api.js";
 
-function Signup({ setPage }) {
+function Signup({ setPage, setUsername }) {
 
-  const [name, setName] = useState("");
+  const [usernameInput, setUsernameInput] = useState("");
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
+    setError("");
+    const trimmedUsername = usernameInput.trim();
+    const trimmedEmail = email.trim();
+    if (trimmedUsername === "" || trimmedEmail === "") {
+      setError("Username and email are required.");
+      return;
+    }
 
-    if (name.trim() !== "" && email.trim() !== "") {
-      setPage("app"); // ✅ go to main app
+    setLoading(true);
+    try {
+      const res = await apiFetch("/api/users/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: trimmedUsername, email: trimmedEmail }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.message || "Sign up failed.");
+        return;
+      }
+      setUsername(data.username);
+      setPage("app");
+    } catch (err) {
+      if (err.name === "AbortError") {
+        setError(
+          "Request timed out. Run the backend on port 3000 (see vite proxy) or set VITE_API_URL."
+        );
+      } else {
+        setError("Cannot reach server.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -23,20 +55,24 @@ function Signup({ setPage }) {
 
         <input
           type="text"
-          placeholder="Enter Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          placeholder="Username (unique)"
+          autoComplete="username"
+          value={usernameInput}
+          onChange={(e) => setUsernameInput(e.target.value)}
         />
 
         <input
           type="email"
-          placeholder="Enter Email"
+          placeholder="Email"
+          autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <button type="submit">
-          Sign Up
+        {error && <p className="auth-error">{error}</p>}
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Creating account…" : "Sign Up"}
         </button>
 
       </form>

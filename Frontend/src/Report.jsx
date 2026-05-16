@@ -9,7 +9,7 @@ function Report({
 
   return (
 
-    <div className="container">
+    <div className="report-root">
 
       <h1 className="title">
         Financial Report

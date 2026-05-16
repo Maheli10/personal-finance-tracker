@@ -1,16 +1,23 @@
 import mongoose from "mongoose";
 
 const transactionSchema = new mongoose.Schema({
-  userId: mongoose.Schema.Types.ObjectId, //store the user ID inside the transactions collection
+  username: {
+    type: String,
+    required: true,
+    trim: true,
+    lowercase: true,
+    index: true,
+  },
+  title: String,
   type: {
     type: String,
-    enum: ["income", "expense"], //enum: only allow specific values
+    enum: ["income", "expense"],
   },
   amount: Number,
   category: String,
   date: {
     type: Date,
-    default: Date.now, //automatically sets current date/time
+    default: Date.now,
   },
 });
 

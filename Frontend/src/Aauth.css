@@ -47,3 +47,15 @@
 .auth-card button:hover {
   transform: scale(1.05);
 }
+
+.auth-card button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auth-error {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #c62828;
+}

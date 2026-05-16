@@ -33,6 +33,146 @@ body {
   overflow-y: auto;
 }
 
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-section {
+  width: 100%;
+}
+
+.transactions {
+  width: 100%;
+}
+
+.transactions h2 {
+  margin-bottom: 12px;
+  color: #0a2f6b;
+  font-size: 1.25rem;
+}
+
+.transaction {
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.transaction:hover {
+  background: #f8fafc;
+}
+
+.transaction-selected {
+  outline: 2px solid #1565ff;
+  outline-offset: 2px;
+  background: #eff6ff;
+}
+
+.empty-transactions {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.transactions-fetch-error {
+  color: #c62828;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.container.container-app {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 40px);
+}
+
+.container-app .report-root {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+}
+
+
+.container-app .main {
+  flex: 1 1 auto;
+}
+
+.app-footer-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 16px;
+  flex-shrink: 0;
+  border-top: 1px solid #e8eef5;
+}
+
+.logout-btn-compact {
+  padding: 5px 12px;
+  font-size: 12px;
+  line-height: 1.2;
+  border-radius: 8px;
+  border: none;
+  background: #64748b;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.logout-btn-compact:hover {
+  opacity: 0.92;
+}
+
+.app-header-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.user-label {
+  font-size: 13px;
+  color: #334155;
+}
+
+.form-error {
+  color: #c62828;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+@media (min-width: 900px) {
+  .container {
+    width: auto;
+    max-width: 960px;
+  }
+
+  .main {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .form-section {
+    flex: 1;
+    min-width: 280px;
+  }
+
+  .transactions {
+    flex: 1;
+    min-width: 280px;
+  }
+}
+
 .title{
   text-align:center;
   margin-bottom:15px;
