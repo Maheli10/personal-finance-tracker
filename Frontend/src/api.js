@@ -1,27 +1,66 @@
-/**
- * API base resolution (no bundled default host):
- * 1) VITE_API_URL or VITE_REMOTE_API_URL (build-time; set in Vercel → Environment Variables)
- * 2) <meta name="api-origin" content="https://your-api.example.com"> in index.html (runtime)
- *
- * Local dev (localhost:5173): leave both unset → same-origin `/api` → Vite proxy → :3000.
- * Vercel: you must set (1) or (2); same-origin `/api` is not proxied unless you add rewrites.
- */
+/* global __APP_VERCEL_BUILD__ */
+function normalizeOrigin(url) {
+  return String(url ?? "").trim().replace(/\/$/, "");
+}
+
+/** Override via VITE_RENDER_URL if your Render URL changes */
+const DEFAULT_RENDER_ORIGIN = normalizeOrigin(
+  import.meta.env.VITE_RENDER_URL ??
+    "https://personal-finance-tracker-kblh.onrender.com"
+);
+
 function metaApiOrigin() {
   if (typeof document === "undefined") return "";
   const el = document.querySelector('meta[name="api-origin"]');
   const raw = el?.getAttribute("content")?.trim();
   if (!raw) return "";
-  return raw.replace(/\/$/, "");
+  return normalizeOrigin(raw);
+}
+
+function isLocalFrontendHost() {
+  if (typeof window === "undefined") return import.meta.env.DEV;
+  const h = window.location.hostname;
+  return h === "localhost" || h === "127.0.0.1";
+}
+
+function isVercelFrontendHost() {
+  if (typeof window === "undefined") return false;
+  const h = window.location.hostname;
+  return (
+    h.endsWith(".vercel.app") ||
+    h.endsWith(".vercel.dev") ||
+    h === "vercel.app"
+  );
+}
+
+/**
+ * After explicit env/meta: route by where the UI is served.
+ * - localhost / 127.0.0.1 → same-origin `/api` (Vite dev :5173 or preview → proxy → :3000)
+ * - Vercel hosts → Render API (DEFAULT_RENDER_ORIGIN)
+ */
+function hostBasedRemoteFallback() {
+  if (import.meta.env.DEV) return "";
+
+  if (isLocalFrontendHost()) return "";
+
+  if (isVercelFrontendHost()) return DEFAULT_RENDER_ORIGIN;
+
+  if (typeof __APP_VERCEL_BUILD__ !== "undefined" && __APP_VERCEL_BUILD__) {
+    return DEFAULT_RENDER_ORIGIN;
+  }
+
+  return "";
 }
 
 function remoteApiBase() {
-  const fromEnv = String(
-    import.meta.env.VITE_API_URL ?? import.meta.env.VITE_REMOTE_API_URL ?? ""
-  )
-    .trim()
-    .replace(/\/$/, "");
-  const fromMeta = metaApiOrigin();
-  return fromEnv || fromMeta;
+  const explicit =
+    normalizeOrigin(import.meta.env.VITE_API_URL) ||
+    normalizeOrigin(import.meta.env.VITE_REMOTE_API_URL) ||
+    metaApiOrigin();
+
+  if (explicit) return explicit;
+
+  return hostBasedRemoteFallback();
 }
 
 let warnedProdWithoutApi = false;
@@ -30,13 +69,13 @@ function warnProductionWithoutApi(remote) {
   if (import.meta.env.DEV || remote || warnedProdWithoutApi) return;
   warnedProdWithoutApi = true;
   console.warn(
-    "[finance-tracker] Deployed build has no API origin. Add VITE_API_URL in Vercel (Project → Settings → Environment Variables) and redeploy, " +
-      "or set <meta name=\"api-origin\" content=\"https://your-api-host\"> in index.html."
+    "[finance-tracker] No API URL resolved. Set VITE_API_URL or VITE_RENDER_URL, or serve from localhost / Vercel."
   );
 }
 
 /**
- * Client default: dev uses "" (proxy). Prod uses remote env/meta if set, else "" (same-origin).
+ * Dev: always proxy unless env forces remote (see apiBaseAttempts).
+ * Prod: inferred Render URL on Vercel; localhost uses proxy.
  */
 export const API_BASE =
   import.meta.env.DEV ? "" : remoteApiBase() || "";
@@ -47,10 +86,6 @@ export function apiUrl(path, baseOverride = API_BASE) {
   return `${base}${p}`;
 }
 
-/**
- * Dev: `/api` via Vite proxy when no env; if VITE_API_URL set, prefer local proxy or remote via VITE_API_PREFER_LOCAL.
- * Prod: only the resolved remote origin (env or meta); never same-origin `/api` unless you intentionally leave it unset.
- */
 function apiBaseAttempts() {
   const remote = remoteApiBase();
 
@@ -77,7 +112,7 @@ function shouldRetryWithHosted(devFirstAttempt, response) {
 }
 
 export const API_SETUP_HINT =
-  "On Vercel: set VITE_API_URL to your API (e.g. https://your-app.onrender.com), redeploy. Locally: npm run dev with backend on port 3000.";
+  "Use npm run dev (proxies /api → port 3000). On Vercel the app calls Render unless VITE_API_URL overrides.";
 
 /** Avoid infinite spinner; tries each base until one returns or all fail. */
 export async function apiFetch(path, options = {}, timeoutMs = 20000) {
