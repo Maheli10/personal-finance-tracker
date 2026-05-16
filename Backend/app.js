@@ -8,7 +8,7 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
-
+import User from "./models/user.js";
 dotenv.config();
 
 const app = express();
@@ -57,7 +57,14 @@ app.use("/api/users", userRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/reports", reportRoutes);
 
-connectDB(MONGO_URI).then(() => {
+connectDB(MONGO_URI).then(async () => {
+  try {
+    await User.syncIndexes();
+    console.log("Database indexes synced successfully.");
+  } catch (error) {
+    console.log("Notice: Could not sync indexes:", error.message);
+  }
+
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });

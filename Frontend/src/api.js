@@ -4,7 +4,7 @@ function normalizeOrigin(url) {
 
 const DEFAULT_RENDER_ORIGIN = normalizeOrigin(
   import.meta.env.VITE_RENDER_URL ??
-    "https://personal-finance-tracker-kblh.onrender.com"
+  "https://personal-finance-tracker-kblh.onrender.com"
 );
 
 function metaApiOrigin() {

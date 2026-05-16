@@ -23,6 +23,10 @@ export const signup = async (req, res) => {
     res.status(201).json(user);
   } catch (error) {
     if (error.code === 11000) {
+      const duplicateField = Object.keys(error.keyValue || {})[0];
+      if (duplicateField) {
+        return res.status(409).json({ message: `${duplicateField.charAt(0).toUpperCase() + duplicateField.slice(1)} already taken` });
+      }
       return res.status(409).json({ message: "Username already taken" });
     }
     res.status(500).json({ error: error.message });
