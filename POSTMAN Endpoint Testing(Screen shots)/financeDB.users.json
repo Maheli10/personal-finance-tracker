@@ -4,7 +4,8 @@
   },
   "name": "Kamal Perera",
   "email": "Kamal@gmail.com",
-  "__v": 0
+  "__v": 0,
+  "username": "kamal"
 },
 {
   "_id": {
@@ -12,7 +13,8 @@
   },
   "name": "Maheli Samaraweera",
   "email": "maheli@gmail.com",
-  "__v": 0
+  "__v": 0,
+  "username": "maheli"
 },
 {
   "_id": {
@@ -34,4 +36,28 @@
   },
   "name": "Nimali Fernando",
   "email": "nimali@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "6a07c2fce02d301a8a6cb4a0"
+  },
+  "username": "alice",
+  "email": "alice@gmail.com",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a082613e7177fd3c307ad72"
+  },
+  "username": "testuser_random123",
+  "email": "testuser_random123@example.com",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0826e7e7177fd3c307ad73"
+  },
+  "username": "hashan",
+  "email": "hashan@gmail.com",
+  "__v": 0
 }]

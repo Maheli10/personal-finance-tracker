@@ -1,0 +1,225 @@
+[{
+  "_id": {
+    "$oid": "69ff45e09e7bc9a771440f45"
+  },
+  "userId": {
+    "$oid": "69ff3d1286b814a634427dd7"
+  },
+  "type": "expense",
+  "amount": 500,
+  "category": "food",
+  "date": {
+    "$date": "2026-05-09T14:34:08.340Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69ff5fc81ae7a9fa934f6631"
+  },
+  "userId": "69ff3d1286b814a634427dd7",
+  "type": "income",
+  "amount": 50000,
+  "category": "salary"
+},
+{
+  "_id": {
+    "$oid": "69ff60161ae7a9fa934f6633"
+  },
+  "userId": "69ff3d1286b814a634427dd7",
+  "type": "expense",
+  "amount": 3000,
+  "category": "transport"
+},
+{
+  "_id": {
+    "$oid": "69ff60671ae7a9fa934f6635"
+  },
+  "userId": "69ff3fcc9e7bc9a771440f44",
+  "type": "income",
+  "amount": 65000,
+  "category": "salary"
+},
+{
+  "_id": {
+    "$oid": "6a06b68c49e81383304d1d4f"
+  },
+  "userId": {
+    "$oid": "69ff3d1286b814a634427dd7"
+  },
+  "type": "income",
+  "amount": 17000,
+  "category": "Part time job",
+  "date": {
+    "$date": "2026-05-15T06:00:44.608Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a07c280e02d301a8a6cb49e"
+  },
+  "username": "maheli",
+  "title": "food",
+  "type": "expense",
+  "amount": 1500,
+  "category": "general",
+  "date": {
+    "$date": "2026-05-16T01:04:00.240Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a07c2a2e02d301a8a6cb49f"
+  },
+  "username": "maheli",
+  "title": "Salary",
+  "type": "income",
+  "amount": 30000,
+  "category": "general",
+  "date": {
+    "$date": "2026-05-16T01:04:34.242Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a07c316e02d301a8a6cb4a1"
+  },
+  "username": "alice",
+  "title": "Salary",
+  "type": "income",
+  "amount": 40000,
+  "category": "general",
+  "date": {
+    "$date": "2026-05-16T01:06:30.258Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a07c43ae02d301a8a6cb4a2"
+  },
+  "username": "alice",
+  "title": "Taxes",
+  "type": "expense",
+  "amount": 2000,
+  "category": "general",
+  "date": {
+    "$date": "2026-05-16T01:11:22.766Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a07c463e02d301a8a6cb4a3"
+  },
+  "username": "alice",
+  "title": "Business",
+  "type": "income",
+  "amount": 50000,
+  "category": "general",
+  "date": {
+    "$date": "2026-05-16T01:12:03.545Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a07c475e02d301a8a6cb4a4"
+  },
+  "username": "alice",
+  "title": "Food",
+  "type": "expense",
+  "amount": 20000,
+  "category": "general",
+  "date": {
+    "$date": "2026-05-16T01:12:21.412Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a07c8b9bd05bd5633858d0e"
+  },
+  "username": "kamal",
+  "title": "Investment",
+  "type": "income",
+  "amount": 100000,
+  "category": "general",
+  "date": {
+    "$date": "2026-05-16T01:30:33.083Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a07c8dfbd05bd5633858d0f"
+  },
+  "username": "kamal",
+  "title": "Travel",
+  "type": "expense",
+  "amount": 65000,
+  "category": "general",
+  "date": {
+    "$date": "2026-05-16T01:31:11.894Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a07c8fdbd05bd5633858d10"
+  },
+  "username": "kamal",
+  "title": "Loan payments",
+  "type": "expense",
+  "amount": 20000,
+  "category": "general",
+  "date": {
+    "$date": "2026-05-16T01:31:41.599Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a081fe03521ccdd611eea83"
+  },
+  "username": "maheli",
+  "title": "Bills",
+  "type": "expense",
+  "amount": 4000,
+  "category": "general",
+  "date": {
+    "$date": "2026-05-16T07:42:24.574Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0820183521ccdd611eea84"
+  },
+  "username": "maheli",
+  "title": "shopping",
+  "type": "expense",
+  "amount": 3000,
+  "category": "general",
+  "date": {
+    "$date": "2026-05-16T07:43:20.650Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0836670e895a207470df3c"
+  },
+  "username": "alice",
+  "title": "Bills",
+  "type": "expense",
+  "amount": 6000,
+  "category": "general",
+  "date": {
+    "$date": "2026-05-16T09:18:31.485Z"
+  },
+  "__v": 0
+}]
